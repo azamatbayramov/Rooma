@@ -6,6 +6,7 @@ import steps_1 from "@/assets/hideAndSeek/steps_1.svg";
 import Trophy from "@/components/game/Trophy.jsx";
 import HiderSeekerTable from "@/pages/GameOver/HiderSeekerTable.jsx";
 import Feedback from "@/components/game/Feedback.jsx";
+import * as XLSX from 'xlsx';
 
 export default function AdminResults() {
     const [searchParams] = useSearchParams();
@@ -61,6 +62,51 @@ export default function AdminResults() {
         fetchData();
     }, [gameId, navigate]);
 
+    const handleDownload = () => {
+        const hiderData = hiderResults.map(({ telegram_id, name, found_time }) => ({
+            "Telegram ID": telegram_id,
+            "Name": name,
+            "Found in Minutes": found_time == null ? "Not found" : found_time
+        }));
+
+        const seekerData = seekerResults.map(({ telegram_id, name, found }) => ({
+            "Telegram ID": telegram_id,
+            "Name": name,
+            "Players Found": found
+        }));
+
+        // Создаем листы Excel для каждой таблицы
+        const hiderSheet = XLSX.utils.json_to_sheet(hiderData);
+        const seekerSheet = XLSX.utils.json_to_sheet(seekerData);
+
+        const wb = XLSX.utils.book_new();
+
+        XLSX.utils.book_append_sheet(wb, hiderSheet, "Hiders");
+        XLSX.utils.book_append_sheet(wb, seekerSheet, "Seekers");
+
+        // Генерируем файл Excel
+        const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
+
+        // Функция для конвертации в бинарный формат
+        const s2ab = s => {
+            const buf = new ArrayBuffer(s.length);
+            const view = new Uint8Array(buf);
+            for (let i = 0; i < s.length; i++) {
+                view[i] = s.charCodeAt(i) & 0xFF;
+            }
+            return buf;
+        };
+
+        // Создаем и инициируем скачивание файла
+        const blob = new Blob([s2ab(wbout)], {type: "application/octet-stream"});
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `hide_and_seek_results_${gameId}.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
+
     return (
         <section className="relative flex flex-col items-center justify-center bg-[#FF7F29]">
             <img src={steps_1} alt="steps" className="absolute top-24 right-0 h-96 z-0"/>
@@ -83,11 +129,18 @@ export default function AdminResults() {
 
                     <button
                         className="mt-2 px-6 py-3 bg-[#FFCD7B] text-black font-bold rounded"
-                            onClick={() => {
-                                navigate("/admin_feedback?game_id=" + gameId);
-                            }}
-                        >
-                            Finish game and check feedback
+                        onClick={() => {
+                            navigate("/admin_feedback?game_id=" + gameId);
+                        }}
+                    >
+                        Finish game and check feedback
+                    </button>
+
+                    <button
+                        className="mt-2 px-6 py-3 bg-[#FFCD7B] text-black font-bold rounded"
+                        onClick={handleDownload}
+                    >
+                        Download Results
                     </button>
 
                 </div>
