@@ -6,7 +6,11 @@ class GameType(Enum):
 
 
 RULES = {
-    GameType.HIDE_AND_SEEK: "Players will be automatically divided into those who are seeking and those who are hiding. After the host started the game, their role appeared on the players’ screens. Those who are hiding will have their own unique code, which will need to be said if the player is found. Accordingly, the seeking player, having found the player, must find out the code and enter it in the phone so that the found person is counted."
+    GameType.HIDE_AND_SEEK: ("Players will be automatically divided into those who are looking and those who are "
+                             "hiding. After the host starts the game, your role appears on the screen. If you are "
+                             "hiding, you'll have their own unique qr code, which needs to be shown the one who "
+                             "found you. If you are searching player, having found the player, you must find out "
+                             "the qr code and enter it on the phone so that the found person is counted.")
 }
 
 
