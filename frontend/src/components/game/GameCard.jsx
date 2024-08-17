@@ -196,7 +196,7 @@ export default function GameCard({name, img, small, setTrack, onClick}) {
 
                             {gameDetails.playerPercentage &&
                                 <div className="flex flex-col md:flex-row justify-between">
-                                    <p className="text-left">Percentage of players:</p>
+                                    <p className="text-left">Percentage of seekers:</p>
                                     <input
                                         type="text"
                                         value={player_percentage.toString()}
