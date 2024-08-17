@@ -106,7 +106,7 @@ export default function WaitPage() {
                         note && (
                             <div className="text-lg text-gray-800 justify-between mb-4">
                                 <p className="mb-2">Game master comment:</p>
-                                <p className="bg-[#FFC87A] px-3 py-1 rounded-lg" style={{whiteSpace: "pre-wrap"}}>{note}</p>
+                                <p className="bg-[#FFC87A] px-3 py-1 rounded-lg font-bold" style={{whiteSpace: "pre-wrap"}}>{note}</p>
                             </div>
                         )
                     }
